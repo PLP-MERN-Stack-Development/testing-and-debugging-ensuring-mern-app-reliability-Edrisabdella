@@ -37,54 +37,94 @@ A comprehensive, production-ready MERN stack application with complete testing s
 
 mern-testing-debugging/
 ├── client/               # React Frontend Application
+
 │   ├── public/           # Static assets (index.html, favicon, etc.)
+
 │   ├── src/
 │   │   ├── components/   # Reusable React components
+
 │   │   │   ├── common/   # Shared UI elements (buttons, modals, etc.)
+
 │   │   │   ├── layout/   # Navigation, header, footer, sidebar
+
 │   │   │   └── pages/    # Page-level components (Home, Login, Dashboard)
+
 │   │   ├── hooks/        # Custom React hooks (useAuth, useFetch)
+
 │   │   ├── context/      # React Context API (AuthContext, ThemeContext)
+
 │   │   ├── services/     # API handlers (Axios or Fetch wrappers)
+
 │   │   ├── utils/        # Helper functions (formatters, validators)
+
 │   │   ├── assets/       # Images, fonts, styles
+
 │   │   ├── tests/        # Unit & integration tests (Jest / RTL)
+
 │   │   ├── App.jsx       # Main React component
+
 │   │   ├── index.js      # Entry point
+
 │   │   └── setupTests.js # Jest / Testing Library setup
+
 │   └── cypress/cpr       # End-to-End (E2E) tests
+
 │       ├── e2e/          # E2E test specifications
+
 │       ├── fixtures/     # Mock data for testing
+
 │       ├── support/      # Cypress custom commands and config
+
 │       └── cypr.config.js# Cypress configuration
+
 │
 ├── server/               # Express Backend Application
+
 │   ├── src/
 │   │   ├── config/       # Environment & database configuration
+
 │   │   ├── controllers/  # Route controllers (handle logic)
+
 │   │   ├── models/       # Mongoose models (MongoDB schemas)
+
 │   │   ├── routes/       # Express routes (API endpoints)
+
 │   │   ├── middleware/   # Express middleware (auth, error handling)
+
 │   │   ├── services/     # Business logic and database operations
+
 │   │   ├── utils/        # Utility helpers (logging, formatting)
+
 │   │   ├── validations/  # Joi / Yup request validations
+
 │   │   ├── app.js        # Express app configuration
+
 │   │   └── server.js     # Server startup (entry point)
+
 │   └── tests/            # Backend unit & integration tests (Mocha / Jest)
 │
 ├── coverage/             # Test coverage reports (generated automatically)
+
 │   ├── client/           # Frontend coverage
+
 │   └── server/           # Backend coverage
 │
 ├── scripts/              # Deployment & maintenance scripts
+
 │   ├── deploy.sh         # Deployment automation (CI/CD)
+
 │   ├── seed.js           # Database seeding script
+
 │   ├── backup-db.sh      # Database backup automation
+
 │   └── lint-check.sh     # Linting & formatting check
 │
 ├── .env                  # Environment variables (not committed)
+
 ├── .gitignore            # Git ignore rules
+
 ├── package.json          # Root project dependencies & scripts
+
 ├── README.md             # Project documentation
 
 ---
