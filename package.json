@@ -1,0 +1,30 @@
+{
+  "name": "mern-testing-debugging",
+  "version": "1.0.0",
+  "description": "Comprehensive testing and debugging for MERN stack applications",
+  "main": "server/src/server.js",
+  "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "test": "jest",
+    "test:unit": "jest --selectProjects=server,client",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:e2e": "cd client && npm run test:e2e",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "setup-test-db": "cd server && npm run setup-test-db"
+  },
+  "keywords": ["mern", "testing", "debugging", "jest", "react", "nodejs"],
+  "author": {
+    "name": "Edris Abdella",
+    "email": "edrisabdella178@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/edris-abdella-7aa521177",
+    "location": "Dire Dawa, Ethiopia"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "concurrently": "^7.6.0"
+  }
+}
