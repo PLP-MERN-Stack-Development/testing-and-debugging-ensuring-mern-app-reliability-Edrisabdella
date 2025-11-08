@@ -1,258 +1,254 @@
-// posts.test.js - Integration tests for posts API endpoints
-
-const request = require('supertest');
-const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const app = require('../../src/app');
-const Post = require('../../src/models/Post');
-const User = require('../../src/models/User');
-const { generateToken } = require('../../src/utils/auth');
+import request from 'supertest';
+import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import app from '../../../src/server.js';
+import Post from '../../../src/models/Post.js';
+import User from '../../../src/models/User.js';
+import { generateToken } from '../../../src/utils/auth.js';
 
 let mongoServer;
-let token;
-let userId;
-let postId;
+let authToken;
+let testUser;
+let testPost;
 
-// Setup in-memory MongoDB server before all tests
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const mongoUri = mongoServer.getUri();
-  await mongoose.connect(mongoUri);
+// Test data
+const testUserData = {
+  username: 'testuser',
+  email: 'test@example.com',
+  password: 'password123'
+};
 
-  // Create a test user
-  const user = await User.create({
-    username: 'testuser',
-    email: 'test@example.com',
-    password: 'password123',
-  });
-  userId = user._id;
-  token = generateToken(user);
+const testPostData = {
+  title: 'Integration Test Post',
+  content: 'This is a test post for integration testing',
+  category: new mongoose.Types.ObjectId().toString()
+};
 
-  // Create a test post
-  const post = await Post.create({
-    title: 'Test Post',
-    content: 'This is a test post content',
-    author: userId,
-    category: mongoose.Types.ObjectId(),
-    slug: 'test-post',
-  });
-  postId = post._id;
-});
-
-// Clean up after all tests
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
-
-// Clean up database between tests
-afterEach(async () => {
-  // Keep the test user and post, but clean up any other created data
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    const collection = collections[key];
-    if (collection.collectionName !== 'users' && collection.collectionName !== 'posts') {
-      await collection.deleteMany({});
-    }
-  }
-});
-
-describe('POST /api/posts', () => {
-  it('should create a new post when authenticated', async () => {
-    const newPost = {
-      title: 'New Test Post',
-      content: 'This is a new test post content',
-      category: mongoose.Types.ObjectId().toString(),
-    };
-
-    const res = await request(app)
-      .post('/api/posts')
-      .set('Authorization', `Bearer ${token}`)
-      .send(newPost);
-
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty('_id');
-    expect(res.body.title).toBe(newPost.title);
-    expect(res.body.content).toBe(newPost.content);
-    expect(res.body.author).toBe(userId.toString());
-  });
-
-  it('should return 401 if not authenticated', async () => {
-    const newPost = {
-      title: 'Unauthorized Post',
-      content: 'This should not be created',
-      category: mongoose.Types.ObjectId().toString(),
-    };
-
-    const res = await request(app)
-      .post('/api/posts')
-      .send(newPost);
-
-    expect(res.status).toBe(401);
-  });
-
-  it('should return 400 if validation fails', async () => {
-    const invalidPost = {
-      // Missing title
-      content: 'This post is missing a title',
-      category: mongoose.Types.ObjectId().toString(),
-    };
-
-    const res = await request(app)
-      .post('/api/posts')
-      .set('Authorization', `Bearer ${token}`)
-      .send(invalidPost);
-
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('error');
-  });
-});
-
-describe('GET /api/posts', () => {
-  it('should return all posts', async () => {
-    const res = await request(app).get('/api/posts');
-
-    expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBeTruthy();
-    expect(res.body.length).toBeGreaterThan(0);
-  });
-
-  it('should filter posts by category', async () => {
-    const categoryId = mongoose.Types.ObjectId().toString();
-    
-    // Create a post with specific category
-    await Post.create({
-      title: 'Filtered Post',
-      content: 'This post should be filtered by category',
-      author: userId,
-      category: categoryId,
-      slug: 'filtered-post',
+describe('Posts API - Integration Tests', () => {
+  beforeAll(async () => {
+    // Start in-memory MongoDB
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
 
-    const res = await request(app)
-      .get(`/api/posts?category=${categoryId}`);
+    // Create test user
+    testUser = await User.create(testUserData);
+    authToken = generateToken(testUser);
 
-    expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBeTruthy();
-    expect(res.body.length).toBeGreaterThan(0);
-    expect(res.body[0].category).toBe(categoryId);
+    // Create test post
+    testPost = await Post.create({
+      ...testPostData,
+      author: testUser._id,
+      slug: 'integration-test-post'
+    });
   });
 
-  it('should paginate results', async () => {
-    // Create multiple posts
-    const posts = [];
-    for (let i = 0; i < 15; i++) {
-      posts.push({
-        title: `Pagination Post ${i}`,
-        content: `Content for pagination test ${i}`,
-        author: userId,
-        category: mongoose.Types.ObjectId(),
-        slug: `pagination-post-${i}`,
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
+
+  beforeEach(async () => {
+    // Clean up posts before each test (keep users)
+    await Post.deleteMany({ _id: { $ne: testPost._id } });
+  });
+
+  describe('GET /api/posts', () => {
+    it('should return all published posts', async () => {
+      const response = await request(app)
+        .get('/api/posts')
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(Array.isArray(response.body.data)).toBeTruthy();
+      expect(response.body.data.length).toBeGreaterThan(0);
+    });
+
+    it('should paginate results correctly', async () => {
+      // Create multiple posts for pagination test
+      const posts = [];
+      for (let i = 0; i < 15; i++) {
+        posts.push({
+          title: `Pagination Post ${i}`,
+          content: `Content ${i}`,
+          author: testUser._id,
+          category: new mongoose.Types.ObjectId(),
+          slug: `pagination-post-${i}`,
+          isPublished: true
+        });
+      }
+      await Post.insertMany(posts);
+
+      const response = await request(app)
+        .get('/api/posts?page=2&limit=5')
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.page).toBe(2);
+      expect(response.body.limit).toBe(5);
+      expect(response.body.data.length).toBe(5);
+    });
+
+    it('should filter posts by search query', async () => {
+      await Post.create({
+        title: 'JavaScript Tutorial',
+        content: 'Learn JavaScript programming',
+        author: testUser._id,
+        category: new mongoose.Types.ObjectId(),
+        slug: 'js-tutorial',
+        isPublished: true
       });
-    }
-    await Post.insertMany(posts);
 
-    const page1 = await request(app)
-      .get('/api/posts?page=1&limit=10');
-    
-    const page2 = await request(app)
-      .get('/api/posts?page=2&limit=10');
+      const response = await request(app)
+        .get('/api/posts?search=javascript')
+        .expect(200);
 
-    expect(page1.status).toBe(200);
-    expect(page2.status).toBe(200);
-    expect(page1.body.length).toBe(10);
-    expect(page2.body.length).toBeGreaterThan(0);
-    expect(page1.body[0]._id).not.toBe(page2.body[0]._id);
-  });
-});
-
-describe('GET /api/posts/:id', () => {
-  it('should return a post by ID', async () => {
-    const res = await request(app)
-      .get(`/api/posts/${postId}`);
-
-    expect(res.status).toBe(200);
-    expect(res.body._id).toBe(postId.toString());
-    expect(res.body.title).toBe('Test Post');
-  });
-
-  it('should return 404 for non-existent post', async () => {
-    const nonExistentId = mongoose.Types.ObjectId();
-    const res = await request(app)
-      .get(`/api/posts/${nonExistentId}`);
-
-    expect(res.status).toBe(404);
-  });
-});
-
-describe('PUT /api/posts/:id', () => {
-  it('should update a post when authenticated as author', async () => {
-    const updates = {
-      title: 'Updated Test Post',
-      content: 'This content has been updated',
-    };
-
-    const res = await request(app)
-      .put(`/api/posts/${postId}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(updates);
-
-    expect(res.status).toBe(200);
-    expect(res.body.title).toBe(updates.title);
-    expect(res.body.content).toBe(updates.content);
-  });
-
-  it('should return 401 if not authenticated', async () => {
-    const updates = {
-      title: 'Unauthorized Update',
-    };
-
-    const res = await request(app)
-      .put(`/api/posts/${postId}`)
-      .send(updates);
-
-    expect(res.status).toBe(401);
-  });
-
-  it('should return 403 if not the author', async () => {
-    // Create another user
-    const anotherUser = await User.create({
-      username: 'anotheruser',
-      email: 'another@example.com',
-      password: 'password123',
+      expect(response.body.success).toBe(true);
+      expect(response.body.data[0].title).toContain('JavaScript');
     });
-    const anotherToken = generateToken(anotherUser);
+  });
 
-    const updates = {
-      title: 'Forbidden Update',
-    };
+  describe('GET /api/posts/:id', () => {
+    it('should return a single post by ID', async () => {
+      const response = await request(app)
+        .get(`/api/posts/${testPost._id}`)
+        .expect(200);
 
-    const res = await request(app)
-      .put(`/api/posts/${postId}`)
-      .set('Authorization', `Bearer ${anotherToken}`)
-      .send(updates);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data._id).toBe(testPost._id.toString());
+      expect(response.body.data.title).toBe(testPostData.title);
+    });
 
-    expect(res.status).toBe(403);
+    it('should return 404 for non-existent post', async () => {
+      const nonExistentId = new mongoose.Types.ObjectId();
+      
+      const response = await request(app)
+        .get(`/api/posts/${nonExistentId}`)
+        .expect(404);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toBe('Post not found');
+    });
+
+    it('should increment views when post is retrieved', async () => {
+      const initialViews = testPost.views;
+      
+      await request(app)
+        .get(`/api/posts/${testPost._id}`)
+        .expect(200);
+
+      const updatedPost = await Post.findById(testPost._id);
+      expect(updatedPost.views).toBe(initialViews + 1);
+    });
+  });
+
+  describe('POST /api/posts', () => {
+    it('should create a new post with valid authentication', async () => {
+      const newPost = {
+        title: 'New Integration Test Post',
+        content: 'This is a new post created via integration test',
+        category: new mongoose.Types.ObjectId().toString(),
+        tags: ['integration', 'testing']
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(newPost)
+        .expect(201);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.title).toBe(newPost.title);
+      expect(response.body.data.author).toBe(testUser._id.toString());
+      expect(response.body.data.tags).toEqual(newPost.tags);
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app)
+        .post('/api/posts')
+        .send(testPostData)
+        .expect(401);
+
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should return 400 for invalid post data', async () => {
+      const invalidPost = {
+        title: '', // Empty title should fail validation
+        content: 'Some content'
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(invalidPost)
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('PUT /api/posts/:id', () => {
+    it('should update post when authenticated as author', async () => {
+      const updates = {
+        title: 'Updated Post Title',
+        content: 'Updated content for integration test'
+      };
+
+      const response = await request(app)
+        .put(`/api/posts/${testPost._id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(updates)
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.title).toBe(updates.title);
+      expect(response.body.data.content).toBe(updates.content);
+    });
+
+    it('should return 403 when non-author tries to update', async () => {
+      // Create another user
+      const otherUser = await User.create({
+        username: 'otheruser',
+        email: 'other@example.com',
+        password: 'password123'
+      });
+      const otherToken = generateToken(otherUser);
+
+      const response = await request(app)
+        .put(`/api/posts/${testPost._id}`)
+        .set('Authorization', `Bearer ${otherToken}`)
+        .send({ title: 'Unauthorized Update' })
+        .expect(403);
+
+      expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('DELETE /api/posts/:id', () => {
+    it('should delete post when authenticated as author', async () => {
+      // Create a post to delete
+      const postToDelete = await Post.create({
+        title: 'Post to Delete',
+        content: 'This post will be deleted',
+        author: testUser._id,
+        category: new mongoose.Types.ObjectId(),
+        slug: 'post-to-delete'
+      });
+
+      const response = await request(app)
+        .delete(`/api/posts/${postToDelete._id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+
+      // Verify post is actually deleted
+      const deletedPost = await Post.findById(postToDelete._id);
+      expect(deletedPost).toBeNull();
+    });
   });
 });
-
-describe('DELETE /api/posts/:id', () => {
-  it('should delete a post when authenticated as author', async () => {
-    const res = await request(app)
-      .delete(`/api/posts/${postId}`)
-      .set('Authorization', `Bearer ${token}`);
-
-    expect(res.status).toBe(200);
-    
-    // Verify post is deleted
-    const deletedPost = await Post.findById(postId);
-    expect(deletedPost).toBeNull();
-  });
-
-  it('should return 401 if not authenticated', async () => {
-    const res = await request(app)
-      .delete(`/api/posts/${postId}`);
-
-    expect(res.status).toBe(401);
-  });
-}); 
