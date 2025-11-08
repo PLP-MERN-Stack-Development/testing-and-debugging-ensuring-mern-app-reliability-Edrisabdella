@@ -36,11 +36,13 @@ A comprehensive, production-ready MERN stack application with complete testing s
 ## 📁 Project Structure
 
 mern-testing-debugging/
+
 ├── client/               # React Frontend Application
 
 │   ├── public/           # Static assets (index.html, favicon, etc.)
 
 │   ├── src/
+
 │   │   ├── components/   # Reusable React components
 
 │   │   │   ├── common/   # Shared UI elements (buttons, modals, etc.)
@@ -81,6 +83,7 @@ mern-testing-debugging/
 ├── server/               # Express Backend Application
 
 │   ├── src/
+
 │   │   ├── config/       # Environment & database configuration
 
 │   │   ├── controllers/  # Route controllers (handle logic)
