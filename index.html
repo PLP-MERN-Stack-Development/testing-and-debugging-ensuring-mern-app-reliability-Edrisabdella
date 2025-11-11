@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MERN Testing & Debugging Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #4361ee;
@@ -86,6 +87,30 @@
 
         nav a:hover, nav a.active {
             background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
         }
 
         .hero {
@@ -498,6 +523,247 @@
             display: flex;
             gap: 1rem;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .api-endpoints {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .endpoint-group {
+            margin-bottom: 2rem;
+        }
+
+        .endpoint-group h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .endpoint {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .endpoint:hover {
+            background: #e9ecef;
+        }
+
+        .method {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .method-get {
+            background: #61affe;
+            color: white;
+        }
+
+        .method-post {
+            background: #49cc90;
+            color: white;
+        }
+
+        .method-put {
+            background: #fca130;
+            color: white;
+        }
+
+        .method-delete {
+            background: #f93e3e;
+            color: white;
+        }
+
+        .route-path {
+            font-family: 'Courier New', monospace;
+            flex-grow: 1;
+        }
+
+        .route-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-operator {
+            color: #d4d4d4;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .post-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .post-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .post-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .post-meta {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .api-response {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .response-success {
+            border-left: 4px solid var(--success);
+        }
+
+        .response-error {
+            border-left: 4px solid var(--danger);
         }
 
         @media (max-width: 768px) {
@@ -518,6 +784,20 @@
             .test-controls {
                 flex-direction: column;
             }
+            
+            .endpoint {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .method {
+                margin-bottom: 0.5rem;
+            }
+            
+            .user-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -534,9 +814,19 @@
                         <li><a href="#overview" class="active">Overview</a></li>
                         <li><a href="#testing">Testing</a></li>
                         <li><a href="#debugging">Debugging</a></li>
-                        <li><a href="#results">Results</a></li>
+                        <li><a href="#api">API Routes</a></li>
+                        <li><a href="#posts">Posts</a></li>
                     </ul>
                 </nav>
+                <div class="user-actions">
+                    <div id="userInfo" class="user-info" style="display: none;">
+                        <div class="avatar" id="userAvatar">U</div>
+                        <span id="userName">User</span>
+                    </div>
+                    <button id="loginBtn" class="btn btn-sm">Login</button>
+                    <button id="registerBtn" class="btn btn-sm btn-outline">Register</button>
+                    <button id="logoutBtn" class="btn btn-sm btn-danger" style="display: none;">Logout</button>
+                </div>
             </div>
         </div>
     </header>
@@ -561,10 +851,10 @@
                 <h3>Edris Abdella</h3>
                 <p>Full Stack MERN Developer</p>
                 <div class="author-details">
-                    <p>📧 edrisabdella178@gmail.com</p>
-                    <p>📱 +251905131051</p>
-                    <p>📍 Dire Dawa, Ethiopia</p>
-                    <p>🔗 <a href="https://www.linkedin.com/in/edris-abdella-7aa521177" target="_blank">LinkedIn Profile</a></p>
+                    <p><i class="fas fa-envelope"></i> edrisabdella178@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +251905131051</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Dire Dawa, Ethiopia</p>
+                    <p><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/edris-abdella-7aa521177" target="_blank">LinkedIn Profile</a></p>
                 </div>
             </div>
 
@@ -604,32 +894,32 @@
 
             <div class="features-grid">
                 <div class="feature">
-                    <div class="feature-icon">🧪</div>
+                    <div class="feature-icon"><i class="fas fa-vial"></i></div>
                     <h3>Unit Testing</h3>
                     <p>Comprehensive tests for React components, utility functions, and Redux actions/reducers</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🔗</div>
+                    <div class="feature-icon"><i class="fas fa-link"></i></div>
                     <h3>Integration Testing</h3>
                     <p>API endpoint testing with Supertest and database operations with test database</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🌐</div>
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
                     <h3>E2E Testing</h3>
                     <p>Critical user flow testing with Cypress for registration, login, and CRUD operations</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🐛</div>
+                    <div class="feature-icon"><i class="fas fa-bug"></i></div>
                     <h3>Debugging Tools</h3>
                     <p>Error boundaries, structured logging, performance monitoring, and debugging hooks</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">📊</div>
+                    <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
                     <h3>Coverage Reports</h3>
                     <p>Detailed test coverage reports with 80%+ coverage threshold for all test types</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🚀</div>
+                    <div class="feature-icon"><i class="fas fa-rocket"></i></div>
                     <h3>Production Features</h3>
                     <p>Security middleware, error handling, validation, and environment configuration</p>
                 </div>
@@ -901,70 +1191,225 @@
         </div>
     </section>
 
-    <section class="section" id="results" style="background: #f8f9fa;">
+    <section class="section" id="api" style="background: #f8f9fa;">
         <div class="container">
             <div class="section-title">
-                <h2>Implementation Results</h2>
-                <p>Comprehensive results from the testing and debugging implementation</p>
+                <h2>API Routes Implementation</h2>
+                <p>Complete RESTful API with authentication, validation, and error handling</p>
             </div>
 
-            <div class="cards">
-                <div class="card">
-                    <h3>Testing Achievements</h3>
-                    <ul style="padding-left: 1.5rem; margin-top: 1rem;">
-                        <li>85%+ test coverage across all modules</li>
-                        <li>200+ unit tests for components and utilities</li>
-                        <li>50+ integration tests for API endpoints</li>
-                        <li>30+ E2E tests for critical user flows</li>
-                        <li>Zero test failures in final implementation</li>
-                    </ul>
+            <div class="api-endpoints">
+                <div class="endpoint-group">
+                    <h4>Authentication Routes</h4>
+                    <div class="endpoint" onclick="callApi('POST', '/api/auth/register')">
+                        <span class="method method-post">POST</span>
+                        <span class="route-path">/api/auth/register</span>
+                        <span class="route-description">Register a new user</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('POST', '/api/auth/login')">
+                        <span class="method method-post">POST</span>
+                        <span class="route-path">/api/auth/login</span>
+                        <span class="route-description">Login user</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('GET', '/api/auth/me')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/auth/me</span>
+                        <span class="route-description">Get current user (Protected)</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('PUT', '/api/auth/profile')">
+                        <span class="method method-put">PUT</span>
+                        <span class="route-path">/api/auth/profile</span>
+                        <span class="route-description">Update user profile (Protected)</span>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Debugging Capabilities</h3>
-                    <ul style="padding-left: 1.5rem; margin-top: 1rem;">
-                        <li>Comprehensive error boundaries implementation</li>
-                        <li>Structured logging with multiple levels</li>
-                        <li>Performance monitoring and metrics</li>
-                        <li>Development debugging hooks</li>
-                        <li>Production error handling</li>
-                    </ul>
+
+                <div class="endpoint-group">
+                    <h4>Posts Routes</h4>
+                    <div class="endpoint" onclick="callApi('GET', '/api/posts')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/posts</span>
+                        <span class="route-description">Get all posts (with pagination)</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('GET', '/api/posts/1')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/posts/:id</span>
+                        <span class="route-description">Get single post by ID</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('POST', '/api/posts')">
+                        <span class="method method-post">POST</span>
+                        <span class="route-path">/api/posts</span>
+                        <span class="route-description">Create new post (Protected)</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('PUT', '/api/posts/1')">
+                        <span class="method method-put">PUT</span>
+                        <span class="route-path">/api/posts/:id</span>
+                        <span class="route-description">Update post (Author only)</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('DELETE', '/api/posts/1')">
+                        <span class="method method-delete">DELETE</span>
+                        <span class="route-path">/api/posts/:id</span>
+                        <span class="route-description">Delete post (Author only)</span>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Production Features</h3>
-                    <ul style="padding-left: 1.5rem; margin-top: 1rem;">
-                        <li>Security middleware implementation</li>
-                        <li>Input validation and sanitization</li>
-                        <li>Environment-based configuration</li>
-                        <li>Graceful error handling</li>
-                        <li>Optimized performance</li>
-                    </ul>
+
+                <div class="endpoint-group">
+                    <h4>User Management Routes</h4>
+                    <div class="endpoint" onclick="callApi('GET', '/api/users')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/users</span>
+                        <span class="route-description">Get all users (Admin only)</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('GET', '/api/users/1')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/users/:id</span>
+                        <span class="route-description">Get user by ID (Admin only)</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('GET', '/api/users/1/posts')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/users/:id/posts</span>
+                        <span class="route-description">Get posts by specific user</span>
+                    </div>
+                </div>
+
+                <div class="endpoint-group">
+                    <h4>Utility Routes</h4>
+                    <div class="endpoint" onclick="callApi('GET', '/api/health')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/health</span>
+                        <span class="route-description">API health check</span>
+                    </div>
+                    <div class="endpoint" onclick="callApi('GET', '/api/docs')">
+                        <span class="method method-get">GET</span>
+                        <span class="route-path">/api/docs</span>
+                        <span class="route-description">API documentation</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="section-title" style="margin-top: 3rem;">
-                <h2>Repository Information</h2>
+            <div class="api-response" id="apiResponse">
+                <p>Click on any API endpoint to see the response</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="posts">
+        <div class="container">
+            <div class="section-title">
+                <h2>Posts Management</h2>
+                <p>Create, read, update, and delete posts with full authentication</p>
             </div>
 
-            <div class="test-results">
-                <div class="test-header">
-                    <h3>GitHub Repository</h3>
+            <div class="test-controls">
+                <button class="btn" onclick="showCreatePostModal()">Create New Post</button>
+                <button class="btn btn-secondary" onclick="loadPosts()">Refresh Posts</button>
+            </div>
+
+            <div class="post-list" id="postList">
+                <div class="post-card">
+                    <div class="post-header">
+                        <div>
+                            <h3 class="post-title">Welcome to MERN Testing & Debugging</h3>
+                            <div class="post-meta">By Admin • 2 days ago</div>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>This is a sample post demonstrating the MERN Testing & Debugging application. The application includes comprehensive testing strategies and debugging techniques.</p>
+                    </div>
                 </div>
-                <div class="test-details">
-                    <p><strong>Project Repository:</strong> <a href="https://github.com/PLP-MERN-Stack-Development/testing-and-debugging-ensuring-mern-app-reliability-Edrisabdella.git" target="_blank">https://github.com/PLP-MERN-Stack-Development/testing-and-debugging-ensuring-mern-app-reliability-Edrisabdella.git</a></p>
-                    <p><strong>Implementation Includes:</strong></p>
-                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
-                        <li>Complete MERN stack application with testing</li>
-                        <li>Jest configuration for client and server</li>
-                        <li>React Testing Library for component testing</li>
-                        <li>Supertest for API endpoint testing</li>
-                        <li>Cypress for E2E testing</li>
-                        <li>Error boundaries and debugging tools</li>
-                        <li>Comprehensive documentation</li>
-                    </ul>
+
+                <div class="post-card">
+                    <div class="post-header">
+                        <div>
+                            <h3 class="post-title">Getting Started with Jest Testing</h3>
+                            <div class="post-meta">By Edris • 1 week ago</div>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Jest is a delightful JavaScript testing framework with a focus on simplicity. It works with projects using: Babel, TypeScript, Node, React, Angular, Vue and more!</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Login to Your Account</h2>
+                <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email</label>
+                    <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Account</h2>
+                <button class="close-modal" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="registerName">Full Name</label>
+                    <input type="text" class="form-control" id="registerName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerEmail">Email</label>
+                    <input type="email" class="form-control" id="registerEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerPassword">Password</label>
+                    <input type="password" class="form-control" id="registerPassword" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerConfirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="modal" id="createPostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Post</h2>
+                <button class="close-modal" onclick="closeModal('createPostModal')">&times;</button>
+            </div>
+            <form id="createPostForm">
+                <div class="form-group">
+                    <label class="form-label" for="postTitle">Post Title</label>
+                    <input type="text" class="form-control" id="postTitle" placeholder="Enter post title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="postContent">Post Content</label>
+                    <textarea class="form-control" id="postContent" rows="5" placeholder="Enter post content" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">Create Post</button>
+            </form>
+        </div>
+    </div>
 
     <footer>
         <div class="container">
@@ -978,7 +1423,8 @@
                     <a href="#overview">Overview</a>
                     <a href="#testing">Testing</a>
                     <a href="#debugging">Debugging</a>
-                    <a href="#results">Results</a>
+                    <a href="#api">API Routes</a>
+                    <a href="#posts">Posts</a>
                 </div>
                 <div class="footer-section">
                     <h3>Technologies</h3>
@@ -1004,20 +1450,419 @@
     </footer>
 
     <script>
-        // Tab functionality
-        function openTab(tabName) {
-            const tabs = document.getElementsByClassName('tab');
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
+        // Application state
+        let currentUser = null;
+        let posts = [
+            {
+                id: 1,
+                title: "Welcome to MERN Testing & Debugging",
+                content: "This is a sample post demonstrating the MERN Testing & Debugging application. The application includes comprehensive testing strategies and debugging techniques.",
+                author: "Admin",
+                date: "2 days ago"
+            },
+            {
+                id: 2,
+                title: "Getting Started with Jest Testing",
+                content: "Jest is a delightful JavaScript testing framework with a focus on simplicity. It works with projects using: Babel, TypeScript, Node, React, Angular, Vue and more!",
+                author: "Edris",
+                date: "1 week ago"
+            }
+        ];
+
+        // DOM elements
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUI();
             }
 
-            const tabContents = document.getElementsByClassName('tab-content');
-            for (let i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove('active');
-            }
+            // Login button
+            loginBtn.addEventListener('click', function() {
+                document.getElementById('loginModal').style.display = 'flex';
+            });
 
-            document.querySelector(`.tab[onclick="openTab('${tabName}')"]`).classList.add('active');
-            document.getElementById(tabName).classList.add('active');
+            // Register button
+            registerBtn.addEventListener('click', function() {
+                document.getElementById('registerModal').style.display = 'flex';
+            });
+
+            // Logout button
+            logoutBtn.addEventListener('click', function() {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                updateUI();
+                addLogEntry('info', 'User logged out successfully');
+            });
+
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                // Mock login
+                if (email && password) {
+                    currentUser = {
+                        name: email.split('@')[0],
+                        email: email,
+                        avatar: email.charAt(0).toUpperCase()
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateUI();
+                    closeModal('loginModal');
+                    addLogEntry('success', `User ${email} logged in successfully`);
+                    
+                    // Reset form
+                    document.getElementById('loginForm').reset();
+                } else {
+                    addLogEntry('error', 'Login failed: Please enter email and password');
+                }
+            });
+
+            // Register form
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirmPassword = document.getElementById('registerConfirmPassword').value;
+                
+                // Mock registration
+                if (name && email && password && confirmPassword) {
+                    if (password !== confirmPassword) {
+                        addLogEntry('error', 'Registration failed: Passwords do not match');
+                        return;
+                    }
+                    
+                    currentUser = {
+                        name: name,
+                        email: email,
+                        avatar: name.charAt(0).toUpperCase()
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateUI();
+                    closeModal('registerModal');
+                    addLogEntry('success', `User ${email} registered successfully`);
+                    
+                    // Reset form
+                    document.getElementById('registerForm').reset();
+                } else {
+                    addLogEntry('error', 'Registration failed: Please fill all fields');
+                }
+            });
+
+            // Create post form
+            document.getElementById('createPostForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const title = document.getElementById('postTitle').value;
+                const content = document.getElementById('postContent').value;
+                
+                if (title && content) {
+                    if (!currentUser) {
+                        addLogEntry('error', 'Please login to create a post');
+                        return;
+                    }
+                    
+                    const newPost = {
+                        id: posts.length + 1,
+                        title: title,
+                        content: content,
+                        author: currentUser.name,
+                        date: 'Just now'
+                    };
+                    
+                    posts.unshift(newPost);
+                    renderPosts();
+                    closeModal('createPostModal');
+                    addLogEntry('success', `Post "${title}" created successfully`);
+                    
+                    // Reset form
+                    document.getElementById('createPostForm').reset();
+                } else {
+                    addLogEntry('error', 'Please fill all fields');
+                }
+            });
+        });
+
+        // Update UI based on authentication state
+        function updateUI() {
+            if (currentUser) {
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                userInfo.style.display = 'flex';
+                userName.textContent = currentUser.name;
+                userAvatar.textContent = currentUser.avatar;
+            } else {
+                loginBtn.style.display = 'block';
+                registerBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showCreatePostModal() {
+            if (!currentUser) {
+                addLogEntry('error', 'Please login to create a post');
+                document.getElementById('loginModal').style.display = 'flex';
+                return;
+            }
+            document.getElementById('createPostModal').style.display = 'flex';
+        }
+
+        // Post management
+        function loadPosts() {
+            renderPosts();
+            addLogEntry('info', 'Posts refreshed successfully');
+        }
+
+        function renderPosts() {
+            const postList = document.getElementById('postList');
+            postList.innerHTML = '';
+            
+            posts.forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.innerHTML = `
+                    <div class="post-header">
+                        <div>
+                            <h3 class="post-title">${post.title}</h3>
+                            <div class="post-meta">By ${post.author} • ${post.date}</div>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editPost(${post.id})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deletePost(${post.id})">Delete</button>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                    </div>
+                `;
+                postList.appendChild(postCard);
+            });
+        }
+
+        function editPost(id) {
+            if (!currentUser) {
+                addLogEntry('error', 'Please login to edit a post');
+                document.getElementById('loginModal').style.display = 'flex';
+                return;
+            }
+            
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                document.getElementById('postTitle').value = post.title;
+                document.getElementById('postContent').value = post.content;
+                document.getElementById('createPostModal').style.display = 'flex';
+                
+                // Update form to edit mode
+                document.querySelector('#createPostModal .modal-title').textContent = 'Edit Post';
+                document.querySelector('#createPostModal button[type="submit"]').textContent = 'Update Post';
+                
+                // Remove current event listener and add new one for update
+                const form = document.getElementById('createPostForm');
+                const newForm = form.cloneNode(true);
+                form.parentNode.replaceChild(newForm, form);
+                
+                newForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const title = document.getElementById('postTitle').value;
+                    const content = document.getElementById('postContent').value;
+                    
+                    if (title && content) {
+                        post.title = title;
+                        post.content = content;
+                        post.date = 'Updated just now';
+                        renderPosts();
+                        closeModal('createPostModal');
+                        addLogEntry('success', `Post "${title}" updated successfully`);
+                        
+                        // Reset form to create mode
+                        document.querySelector('#createPostModal .modal-title').textContent = 'Create New Post';
+                        document.querySelector('#createPostModal button[type="submit"]').textContent = 'Create Post';
+                        document.getElementById('createPostForm').reset();
+                    }
+                });
+            }
+        }
+
+        function deletePost(id) {
+            if (!currentUser) {
+                addLogEntry('error', 'Please login to delete a post');
+                document.getElementById('loginModal').style.display = 'flex';
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete this post?')) {
+                const postIndex = posts.findIndex(p => p.id === id);
+                if (postIndex !== -1) {
+                    const postTitle = posts[postIndex].title;
+                    posts.splice(postIndex, 1);
+                    renderPosts();
+                    addLogEntry('success', `Post "${postTitle}" deleted successfully`);
+                }
+            }
+        }
+
+        // API simulation
+        function callApi(method, endpoint) {
+            const responseDiv = document.getElementById('apiResponse');
+            
+            // Show loading
+            responseDiv.innerHTML = `<p>Calling ${method} ${endpoint}...</p>`;
+            responseDiv.className = 'api-response';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                let response;
+                
+                // Mock responses based on endpoint
+                if (endpoint === '/api/auth/register') {
+                    response = {
+                        success: true,
+                        message: 'User registered successfully',
+                        data: {
+                            user: {
+                                id: 1,
+                                name: 'Test User',
+                                email: 'test@example.com'
+                            },
+                            token: 'mock-jwt-token'
+                        }
+                    };
+                } else if (endpoint === '/api/auth/login') {
+                    response = {
+                        success: true,
+                        message: 'Login successful',
+                        data: {
+                            user: {
+                                id: 1,
+                                name: 'Test User',
+                                email: 'test@example.com'
+                            },
+                            token: 'mock-jwt-token'
+                        }
+                    };
+                } else if (endpoint === '/api/auth/me') {
+                    if (!currentUser) {
+                        response = {
+                            success: false,
+                            message: 'Not authenticated'
+                        };
+                    } else {
+                        response = {
+                            success: true,
+                            data: currentUser
+                        };
+                    }
+                } else if (endpoint === '/api/posts') {
+                    response = {
+                        success: true,
+                        data: posts,
+                        count: posts.length,
+                        page: 1,
+                        pages: 1
+                    };
+                } else if (endpoint.startsWith('/api/posts/') && method === 'GET') {
+                    const id = endpoint.split('/').pop();
+                    const post = posts.find(p => p.id == id);
+                    if (post) {
+                        response = {
+                            success: true,
+                            data: post
+                        };
+                    } else {
+                        response = {
+                            success: false,
+                            message: 'Post not found'
+                        };
+                    }
+                } else if (endpoint === '/api/health') {
+                    response = {
+                        success: true,
+                        message: 'API is running successfully',
+                        timestamp: new Date().toISOString()
+                    };
+                } else if (endpoint === '/api/docs') {
+                    response = {
+                        message: 'MERN Testing & Debugging API Documentation',
+                        version: '1.0.0',
+                        endpoints: {
+                            auth: {
+                                'POST /api/auth/register': 'Register a new user',
+                                'POST /api/auth/login': 'Login user',
+                                'GET /api/auth/me': 'Get current user',
+                                'PUT /api/auth/profile': 'Update user profile'
+                            },
+                            posts: {
+                                'GET /api/posts': 'Get all posts',
+                                'GET /api/posts/:id': 'Get single post by ID',
+                                'POST /api/posts': 'Create new post',
+                                'PUT /api/posts/:id': 'Update post',
+                                'DELETE /api/posts/:id': 'Delete post'
+                            }
+                        }
+                    };
+                } else {
+                    response = {
+                        success: false,
+                        message: 'Endpoint not implemented in demo'
+                    };
+                }
+                
+                // Display response
+                responseDiv.innerHTML = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
+                responseDiv.classList.add(response.success ? 'response-success' : 'response-error');
+                
+                // Log the API call
+                addLogEntry(response.success ? 'success' : 'error', 
+                    `API ${method} ${endpoint}: ${response.success ? 'Success' : 'Failed'}`);
+            }, 1000);
+        }
+
+        // Debug console functions
+        function addLogEntry(type, message) {
+            const consoleContent = document.getElementById('consoleContent');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            let logClass = 'log-info';
+            if (type === 'error') logClass = 'log-error';
+            else if (type === 'warn') logClass = 'log-warn';
+            else if (type === 'success') logClass = 'log-success';
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${logClass}`;
+            logEntry.textContent = `[${type.toUpperCase()}] ${message} - ${timestamp}`;
+            
+            consoleContent.appendChild(logEntry);
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('consoleContent').innerHTML = '';
+        }
+
+        function triggerErrorBoundary() {
+            addLogEntry('error', 'Error boundary triggered! This would display a fallback UI in a real React application.');
+        }
+
+        function showPerformanceMetrics() {
+            addLogEntry('info', 'Performance metrics - API Response: 120ms, Component Render: 45ms');
         }
 
         // Test execution functionality
@@ -1100,55 +1945,26 @@
                 testResults.innerHTML = resultsHTML;
                 testStatus.textContent = `${passed}/${total} tests passed`;
                 testStatus.className = 'status-pass';
+                
+                // Log test results
+                addLogEntry('success', `${testType} tests completed: ${passed}/${total} passed`);
             }, 1500);
         }
 
-        // Debug console functionality
-        function addLogEntry(type) {
-            const consoleContent = document.getElementById('consoleContent');
-            const timestamp = new Date().toLocaleTimeString();
-            
-            let logClass = 'log-info';
-            let logType = 'INFO';
-            let message = 'This is a sample log message';
-            
-            if (type === 'warn') {
-                logClass = 'log-warn';
-                logType = 'WARN';
-                message = 'Sample warning message for testing';
-            } else if (type === 'error') {
-                logClass = 'log-error';
-                logType = 'ERROR';
-                message = 'Sample error message for testing';
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
             }
-            
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry ${logClass}`;
-            logEntry.textContent = `[${logType}] ${message} - ${timestamp}`;
-            
-            consoleContent.appendChild(logEntry);
-            consoleContent.scrollTop = consoleContent.scrollHeight;
-        }
 
-        function clearConsole() {
-            document.getElementById('consoleContent').innerHTML = '';
-        }
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
 
-        function triggerErrorBoundary() {
-            addLogEntry('error');
-            alert('Error boundary triggered! This would display a fallback UI in a real React application.');
-        }
-
-        function showPerformanceMetrics() {
-            const consoleContent = document.getElementById('consoleContent');
-            const timestamp = new Date().toLocaleTimeString();
-            
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry log-success';
-            logEntry.textContent = `[PERF] Performance metrics - API Response: 120ms, Component Render: 45ms - ${timestamp}`;
-            
-            consoleContent.appendChild(logEntry);
-            consoleContent.scrollTop = consoleContent.scrollHeight;
+            document.querySelector(`.tab[onclick="openTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
         }
 
         // Smooth scrolling for navigation links
@@ -1193,6 +2009,13 @@
                     link.classList.add('active');
                 }
             });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
         });
     </script>
 </body>
